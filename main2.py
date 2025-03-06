@@ -582,13 +582,42 @@ async def account_login(bot: Client, m: Message):
         await m.reply_text(e)
     await m.reply_text("Done ✅")
     
-    
-    
-    
+
+
+from pyrogram.types import ReplyKeyboardMarkup
+
 @bot.on_message(filters.command(["cw"]) & filters.chat(sudo_groups))
 async def cw_handler(bot: Client, m: Message):
-    email = input("Enter E-Mail/Phone: ")
-    password = input("Enter Password: ")  #Consider using getpass for better security
+    # Use a ReplyKeyboardMarkup for better UX
+    keyboard = ReplyKeyboardMarkup([["Cancel"]], resize_keyboard=True)
+    await bot.send_message(m.chat.id, "Enter your CareerWill Email/Phone number:", reply_markup=keyboard)
+    
+    try:
+        msg_email = await bot.listen(m.chat.id, filters=filters.text & ~filters.command)
+        email = msg_email.text
+        if email.lower() == 'cancel':
+            await bot.send_message(m.chat.id,"Action Cancelled!")
+            return
+        await msg_email.delete()
+    except:
+        await bot.send_message(m.chat.id, "Timeout or Error occurred. Please try again.")
+        return
+
+    await bot.send_message(m.chat.id, "Enter your CareerWill Password:", reply_markup=keyboard) # Send the password prompt
+    try:
+        msg_pass = await bot.listen(m.chat.id, filters=filters.text & ~filters.command) # Listen for the password
+        password = msg_pass.text
+        if password.lower() == 'cancel':
+            await bot.send_message(m.chat.id, "Action Cancelled!")
+            return
+        await msg_pass.delete()  # Delete the message containing the password
+    except:
+        await bot.send_message(m.chat.id, "Timeout or Error occurred. Please try again.")
+        return
+    
+    # Proceed with CareerWill login and file grabbing
+
+
     try:
         a = gettoken(email, password)  #Call gettoken with email and password
         printbatches(a)
