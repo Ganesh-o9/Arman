@@ -361,7 +361,8 @@ bc_url = (
 bc_hdr = {"BCOV-POLICY": BCOV_POLICY}
 
 url="https://elearn.crwilladmin.com/api/v5/"
-
+email = None
+password = None
 info= {
  "deviceType":"android",
  "password": password,
