@@ -587,7 +587,8 @@ async def account_login(bot: Client, m: Message):
 from pyrogram.types import ReplyKeyboardMarkup
 
 import asyncio
-
+@bot.on_message(filters.chat(sudo_groups) & filters.text & lambda _, msg: not msg.text.startswith("/"))
+async def cw_handler(bot: Client, m: Message):
 @bot.on_message(filters.command(["cw"]) & filters.chat(sudo_groups))
 async def cw_handler(bot: Client, m: Message):
     keyboard = ReplyKeyboardMarkup([["Cancel"]], resize_keyboard=True)
