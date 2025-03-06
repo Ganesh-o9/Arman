@@ -35,6 +35,7 @@ import os
 import yt_dlp
 from bs4 import BeautifulSoup
 from pyrogram.types import InputMediaDocument
+from pyrogram import filters  
 
 botStartTime = time.time()
 batch = []
