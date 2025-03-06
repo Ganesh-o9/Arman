@@ -94,7 +94,7 @@ def get_token(email, password):
     }
 
 
-def gettoken():
+def gettoken(email, password):
     data1 = {
         "email": email,
         "password": password,
@@ -118,7 +118,7 @@ def gettoken():
         exit()
     else:
         headers["user-agent"] = random.choice(u)
-        gettoken()
+        return gettoken(email, password)
 
 
 def printbatches(token):
