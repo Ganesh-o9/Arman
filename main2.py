@@ -586,34 +586,44 @@ async def account_login(bot: Client, m: Message):
 
 from pyrogram.types import ReplyKeyboardMarkup
 
+import asyncio
+
 @bot.on_message(filters.command(["cw"]) & filters.chat(sudo_groups))
 async def cw_handler(bot: Client, m: Message):
-    # Use a ReplyKeyboardMarkup for better UX
     keyboard = ReplyKeyboardMarkup([["Cancel"]], resize_keyboard=True)
     await bot.send_message(m.chat.id, "Enter your CareerWill Email/Phone number:", reply_markup=keyboard)
-    
+
     try:
-        msg_email = await bot.listen(m.chat.id, filters=filters.text & ~filters.command)
+        msg_email = await bot.listen(m.chat.id, filters=filters.text & ~filters.command, timeout=60) #Increased timeout to 60 seconds
         email = msg_email.text
         if email.lower() == 'cancel':
-            await bot.send_message(m.chat.id,"Action Cancelled!")
+            await bot.send_message(m.chat.id, "Action Cancelled!")
             return
         await msg_email.delete()
-    except:
-        await bot.send_message(m.chat.id, "Timeout or Error occurred. Please try again.")
+    except asyncio.TimeoutError:
+        await bot.send_message(m.chat.id, "Timeout waiting for email. Please try again.")
+        return
+    except Exception as e:
+        await bot.send_message(m.chat.id, f"Error receiving email: {str(e)}. Please try again.")
         return
 
-    await bot.send_message(m.chat.id, "Enter your CareerWill Password:", reply_markup=keyboard) # Send the password prompt
+    await bot.send_message(m.chat.id, "Enter your CareerWill Password:", reply_markup=keyboard)
+
     try:
-        msg_pass = await bot.listen(m.chat.id, filters=filters.text & ~filters.command) # Listen for the password
+        msg_pass = await bot.listen(m.chat.id, filters=filters.text & ~filters.command, timeout=60) # Increased timeout
         password = msg_pass.text
         if password.lower() == 'cancel':
             await bot.send_message(m.chat.id, "Action Cancelled!")
             return
-        await msg_pass.delete()  # Delete the message containing the password
-    except:
-        await bot.send_message(m.chat.id, "Timeout or Error occurred. Please try again.")
+        await msg_pass.delete()
+    except asyncio.TimeoutError:
+        await bot.send_message(m.chat.id, "Timeout waiting for password. Please try again.")
         return
+    except Exception as e:
+        await bot.send_message(m.chat.id, f"Error receiving password: {str(e)}. Please try again.")
+        return
+
+    # ... (rest of your CareerWill login and file grabbing logic) ...
     
     # Proceed with CareerWill login and file grabbing
 
