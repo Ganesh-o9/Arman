@@ -46,10 +46,10 @@ bot = Client(
     
     
 # CW Extractor Code (integrated from previous file)
-print(render("CW", gradient=["red", "magenta"], align="center"))
+#print(render("CW", gradient=["red", "magenta"], align="center"))
 
-text = "📤 CW Extractor | Notes + Videos TXT | Developed in PYTHON 🧲\n"
-print(text.center(os.get_terminal_size().columns))
+#text = "📤 CW Extractor | Notes + Videos TXT | Developed in PYTHON 🧲\n"
+#print(text.center(os.get_terminal_size().columns))
 
 u = [
     "okhttp/5.0.0-alpha.1",
